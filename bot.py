@@ -20,8 +20,8 @@ from telegram.ext import (
 import database  # Убедись, что у тебя есть файл database.py
 
 # === Настройки из переменных окружения ===
-ADMIN_ID = os.getenv("ADMIN_ID")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_ID = os.getenv("364441261")
+BOT_TOKEN = os.getenv("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI")
 
 # === Приветственный текст ===
 def load_welcome_text(username):
