@@ -1,7 +1,8 @@
 import os
 import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters, BotCommand
+from telegram import BotCommand  #Теперь импортируется напрямую из telegram
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
 import database  # Убедись, что у тебя есть файл database.py
 
@@ -273,7 +274,7 @@ async def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, button_handler))
 
     # === Настраиваем и запускаем webhook ===
-    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com ")
+    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com")
     port = int(os.getenv("PORT", "8000"))
 
     print(f"🌐 Устанавливаю webhook: {webhook_url}/webhook")
