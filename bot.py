@@ -15,11 +15,11 @@ async def main():
     """
 
     # Получаем URL и порт из переменных окружения
-    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com")
+    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com ")
     port = int(os.getenv("PORT", "8000"))
 
     # Проверяем, что токен задан
-    bot_token = os.getenv("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI")
+    bot_token = os.getenv("BOT_TOKEN")
     if not bot_token:
         raise ValueError("BOT_TOKEN не задан в переменных окружения")
 
