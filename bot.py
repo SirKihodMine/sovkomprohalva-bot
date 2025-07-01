@@ -1,3 +1,4 @@
+import uvicorn
 import os
 import asyncio
 from telegram import (
@@ -13,8 +14,7 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     ContextTypes,
-    filters,
-    WebhookHandler
+    filters
 )
 
 import database  # Убедись, что у тебя есть файл database.py
@@ -254,9 +254,10 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # === Основная асинхронная функция запуска бота через Webhook ===
+# === Основная асинхронная функция запуска бота через Webhook ===
 async def main():
     """
-    Запуск бота через Webhook
+    Запуск бота через webhook
     """
 
     # Инициализируем базу данных
@@ -265,7 +266,7 @@ async def main():
     # Создаём приложение
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Устанавливаем описание команд в меню Telegram
+    # Устанавливаем команды в меню Telegram
     commands = [
         BotCommand("start", "Запустить бота"),
         BotCommand("mylink", "Получить реферальную ссылку"),
@@ -285,16 +286,21 @@ async def main():
     # Добавляем обработчик кнопок
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, button_handler))
 
-    # === Настраиваем Webhook ===
-    webhook_url = os.getenv("WEBHOOK_URL", "https://your-bot-url.onrender.com") 
+    # === Настраиваем и запускаем webhook ===
+    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com ")
     port = int(os.getenv("PORT", "8000"))
+
+    print(f"🌐 Устанавливаю webhook: {webhook_url}/webhook")
 
     await app.bot.set_webhook(f"{webhook_url}/webhook")
 
-    # Запускаем Webhook
-    handler = WebhookHandler(app.update_queue, app.bot)
-    handler.run(port=port)
-
+    # Запускаем бота через webhook
+    await app.run_webhook(
+        listen='0.0.0.0',           # Слушаем все соединения
+        port=port,                  # Порт из переменной окружения
+        url_path="",                # Путь, можно оставить пустым
+        webhook_url=f"{webhook_url}/webhook"  # URL для Telegram
+    )
     print("✅ Бот успешно запущен через Webhook")
 
 
