@@ -1,9 +1,13 @@
-import asyncio
-import nest_asyncio
-from bot import main
+from bot import ReferralBot
+import os
 
-# Разрешаем использование asyncio.run() на Render
-nest_asyncio.apply()
+def main():
+    token = os.environ.get('TELEGRAM_BOT_TOKEN')
+    if not token:
+        raise ValueError("Не найден TELEGRAM_BOT_TOKEN в переменных окружения")
+    
+    bot = ReferralBot(token)
+    bot.run()
 
-# Запуск основной функции
-asyncio.run(main())
+if __name__ == "__main__":
+    main()
