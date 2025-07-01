@@ -1,2 +1,2 @@
-python-telegram-bot[webhooks]==20.2
-nest_asyncio
+telebot==4.2.3
+python-dotenv>=0.20.0
