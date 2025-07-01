@@ -1,16 +1,9 @@
 import asyncio
-from bot import start
-from telegram.ext import ApplicationBuilder
+from telegram.ext import CommandHandler  # ✅ Добавлено
+from bot import main  # Это импортирует твою основную функцию
 
-async def main():
-    # Инициализируем бота
-    app = ApplicationBuilder().token("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI").build()
-
-    # Добавляем команды
-    app.add_handler(CommandHandler("start", start))
-
-    print("✅ Бот запущен")
-    await app.run_polling()
+async def run():
+    await main()
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(run())
