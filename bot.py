@@ -1,8 +1,7 @@
 import os
 import asyncio
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
-from telegram import BotCommand  #Теперь импортируется напрямую из telegram
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+import nest_asyncio
+from telegram.ext import ApplicationBuilder, BotCommand
 
 import database  # Убедись, что у тебя есть файл database.py
 
@@ -247,6 +246,9 @@ async def main():
     Запуск бота через webhook
     """
 
+    # Применяем nest_asyncio для работы с вложенными циклами событий
+    nest_asyncio.apply()
+
     # Инициализируем базу данных
     database.init_db()
 
@@ -274,7 +276,7 @@ async def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, button_handler))
 
     # === Настраиваем и запускаем webhook ===
-    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com")
+    webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com ")
     port = int(os.getenv("PORT", "8000"))
 
     print(f"🌐 Устанавливаю webhook: {webhook_url}/webhook")
@@ -285,9 +287,11 @@ async def main():
     await app.run_webhook(
         listen='0.0.0.0',
         port=port,
-        url_path="",
+        url_path="",  # Можно указать свой путь, если нужно
         webhook_url=f"{webhook_url}/webhook"
     )
+
+    print("✅ Бот успешно запущен через Webhook")
 
 
 # === Точка входа для Render.com ===
