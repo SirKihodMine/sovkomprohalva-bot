@@ -18,10 +18,15 @@ async def main():
     webhook_url = os.getenv("WEBHOOK_URL", "https://sovkomprohalva-bot.onrender.com")
     port = int(os.getenv("PORT", "8000"))
 
-    # Создаём бота
-    app = ApplicationBuilder().token("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI").build()
+    # Проверяем, что токен задан
+    bot_token = os.getenv("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI")
+    if not bot_token:
+        raise ValueError("BOT_TOKEN не задан в переменных окружения")
 
-    # Добавляем обработчики команд
+    # Создаём бота
+    app = ApplicationBuilder().token(bot_token).build()
+
+    # Добавляем команды
     app.add_handler(CommandHandler("start", start))
 
     print(f"🌐 Устанавливаю webhook: {webhook_url}/webhook")
@@ -29,5 +34,9 @@ async def main():
     # Устанавливаем Webhook для Telegram
     await app.bot.set_webhook(f"{webhook_url}/webhook")
 
-    # Запускаем приложение
-    await app.run_webhook(listen='0.0.0.0', port=port, url_path="")
+    # Запускаем приложение через webhook
+    await app.run_webhook(
+        listen='0.0.0.0',
+        port=port,
+        url_path=""
+    )
