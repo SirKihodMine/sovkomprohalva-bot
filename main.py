@@ -2,8 +2,7 @@ import asyncio
 import nest_asyncio
 from bot import main
 
-# Разрешаем вложенные event loops
+# Разрешаем использовать asyncio.run() + run_webhook()
 nest_asyncio.apply()
 
-# Запуск бота
 asyncio.run(main())
