@@ -19,7 +19,7 @@ async def main():
     port = int(os.getenv("PORT", "8000"))
 
     # Создаём бота
-    app = ApplicationBuilder().token("ТОКЕН_БОТА").build()
+    app = ApplicationBuilder().token("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI").build()
 
     # Добавляем команды
     app.add_handler(CommandHandler("start", start))
