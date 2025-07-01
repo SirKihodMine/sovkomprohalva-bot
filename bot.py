@@ -12,7 +12,7 @@ async def main():
     """
     Создаёт и запускает бота
     """
-    app = ApplicationBuilder().token("ТОКЕН_БОТА").build()
+    app = ApplicationBuilder().token("7964769811:AAG6Cvz9VgSms3H0KBZ2MwOTDWFiH1XkwDI").build()
     app.add_handler(CommandHandler("start", start))
     print("✅ Бот запущен через webhook")
     await app.run_polling()
