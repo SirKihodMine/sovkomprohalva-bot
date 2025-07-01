@@ -1,8 +1,7 @@
-import uvicorn
 import os
 import asyncio
-from telegram import Update, BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters, BotCommand
 
 import database  # Убедись, что у тебя есть файл database.py
 
@@ -10,13 +9,15 @@ import database  # Убедись, что у тебя есть файл database
 ADMIN_ID = os.getenv("ADMIN_ID")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+
 # === Приветственный текст ===
 def load_welcome_text(username):
     try:
         with open('welcome.html', 'r', encoding='utf-8') as file:
             text = file.read()
             return text.replace('@{username}', f'@{username}')
-    except FileNotFoundError:
+    except (FileNotFoundError, IOError) as e:
+        print(f"[Ошибка] Не удалось прочитать welcome.html: {e}")
         return f"👋 Привет, @{username}!\n\nНе удалось загрузить приветственный текст."
 
 
@@ -52,8 +53,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # === Инлайн-кнопки под текстом ===
     keyboard = [
         [
-            InlineKeyboardButton("📹 ПЕРЕЙТИ ->", url="https://sovkomprohalva.ru"), 
-            InlineKeyboardButton("💬 НАШ Чат", url="https://t.me/+Yaq7IZdTEWA3OWIy") 
+            InlineKeyboardButton("📹 ПЕРЕЙТИ ->", url="https://sovkomprohalva.ru "),
+            InlineKeyboardButton("💬 НАШ Чат", url="https://t.me/+Yaq7IZdTEWA3OWIy ")
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -110,7 +111,7 @@ async def my_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-# === Команда /stats === 
+# === Команда /stats ===
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
     Показывает статистику пользователя: ID и количество приглашённых
@@ -189,8 +190,8 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # === КНОПКИ В РАССЫЛКЕ ===
         keyboard = [
             [
-                InlineKeyboardButton("📹 ПЕРЕЙТИ ->", url="https://sovkomprohalva.ru"), 
-                InlineKeyboardButton("💬 Наш чат", url="https://t.me/+Yaq7IZdTEWA3OWIy") 
+                InlineKeyboardButton("📹 ПЕРЕЙТИ ->", url=" https://sovkomprohalva.ru "),
+                InlineKeyboardButton("💬 Наш чат", url="https://t.me/+Yaq7IZdTEWA3OWIy ")
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -237,10 +238,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await top(update, context)
     elif text == "🌐 ПЕРЕЙТИ":
         await update.message.reply_text("🚀 Открываем веб-приложение...", reply_markup=None)
-        # Здесь можно добавить WebAppInfo, когда будет готово
 
 
-# === Основная асинхронная функция запуска бота через Webhook ===
 # === Основная асинхронная функция запуска бота через Webhook ===
 async def main():
     """
@@ -283,12 +282,11 @@ async def main():
 
     # Запускаем бота через webhook
     await app.run_webhook(
-        listen='0.0.0.0',           # Слушаем все соединения
-        port=port,                  # Порт из переменной окружения
-        url_path="",                # Путь, можно оставить пустым
-        webhook_url=f"{webhook_url}/webhook"  # URL для Telegram
+        listen='0.0.0.0',
+        port=port,
+        url_path="",
+        webhook_url=f"{webhook_url}/webhook"
     )
-    print("✅ Бот успешно запущен через Webhook")
 
 
 # === Точка входа для Render.com ===
